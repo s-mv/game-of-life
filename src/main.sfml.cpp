@@ -2,12 +2,11 @@
    author: smv */
 
 #include <cmath>
-#include <iostream>
 
 #include <SFML/Graphics.hpp>
 
 #include "./conway.hpp"
-#include "./eventhandler.hpp"
+#include "./eventhandler.sfml.hpp"
 
 int width = 30, height = 30;
 
@@ -18,7 +17,13 @@ int state = 1; // 0 for pause, 1 for resume
 int main(int argc, char **argv) {
   // check if dimensions are provided
   // TODO: resize/scale stuff according to dimensions
-  argv[1] && (width = std::atoi(argv[1]), height = std::atoi(argv[2]));
+  (argv[1] && argv[2]) &&
+      (width = std::atoi(argv[1]), height = std::atoi(argv[2]));
+  if (width > height) {
+    winhgt = winwid * height / width;
+  } else if (width < height) {
+    winwid = winhgt * width / height;
+  }
   std::vector<std::vector<int>> life(height, std::vector<int>(width, 0));
 
   sf::RenderWindow window(sf::VideoMode(winwid, winhgt), "My window",
