@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game of Life | WASM | smv</title>
+  <link rel="stylesheet" href="./index.css">
+</head>
+
+<body>
+  <div>Dimensions</div>
+  x: <input type="number" id="x" min="2" vaule="20" max="200">
+  y: <input type="number" id="y" min="2" vaule="20" max="200">
+  <div>Rules</div>
+  <input type="text" id="rules">
+  <div>(use rules as written <a target="_blank"
+      href="https://github.com/s-mv/game-of-life/blob/main/README.md#custom-rules">here</a>, for example <code>l3=0 m5=0</code>)</div>
+  <div class="button">Run!</div>
+  <script src="./index.js"></script>
+</body>
+
+</html>

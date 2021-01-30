@@ -1,0 +1,24 @@
+body {
+  background-color: #5300c6;
+  width: 100vw;
+  height: 100vh;
+  padding: 0;
+  margin: 0;
+  border: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  align-content: center;
+}
+
+canvas {
+  width: 100vw;
+  height: auto;
+}
+
+@media (orientation: landscape) {
+canvas {
+  width: auto;
+  height: 100vh;
+}
+}

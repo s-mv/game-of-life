@@ -2,6 +2,7 @@
    author: smv */
 
 #include <cmath>
+#include <string>
 
 #include <SDL2/SDL.h>
 
@@ -15,15 +16,31 @@ int winwid = 600, winhgt = 600;
 int state = 1; // 0 for pause, 1 for resume
 
 int main(int argc, char **argv) {
-  // check if dimensions are provided
-  // TODO: resize/scale stuff according to dimensions
-  (argv[1] && argv[2]) &&
-      (width = std::atoi(argv[1]), height = std::atoi(argv[2]));
-  if (width > height) {
-    winhgt = winwid * height / width;
-  } else if (width < height) {
-    winwid = winhgt * width / height;
+  std::vector<std::string> rules = {};
+  for (size_t i = 0; i < argc; i++) {
+    // check if dimensions are provided
+    if (std::string(argv[i]) == "-d") {
+      argv[i + 1] && (width = std::atoi(argv[i + 1]));
+      argv[i + 2] && (height = std::atoi(argv[i + 2]));
+    };
+    // check for rules
+    if (std::string(argv[i]) == "-r") {
+      size_t n = i + 1;
+      while (true) {
+        if (n >= argc || std::string(argv[n]) == ";")
+          break;
+        rules.push_back(std::string(argv[n++]));
+      }
+    }
   }
+
+  for (int i = 0; i < rules.size(); i++)
+    // setting up dimensions
+    if (width > height) {
+      winhgt = winwid * height / width;
+    } else if (width < height) {
+      winwid = winhgt * width / height;
+    }
   std::vector<std::vector<int>> life(height, std::vector<int>(width, 0));
 
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -60,18 +77,19 @@ int main(int argc, char **argv) {
     state = (int)!handler.keys["space"];
 
     if (handler.mouse["pressed"] != 0 && state == 0) {
-      life[floor(handler.mouse["y"] * height / winhgt)]
-          [floor(handler.mouse["x"] * width / winwid)] =
+      life[handler.mouse["y"] * height / winhgt % height]
+          [handler.mouse["x"] * width / winwid % width] =
               (int)!handler.keys["shift"];
     }
 
     if (state == 1 && i >= 0.25) {
-      conways(life);
+      conways(life, rules);
       i = 0;
     } else if (state == 0 && handler.keys["right"] && i >= 0.1) {
-      conways(life);
+      conways(life, rules);
       i = 0;
     }
+
     SDL_FillRect(surface, NULL, SDL_MapRGB(surface->format, 0xff, 0xba, 0x37));
     for (std::vector<int>::size_type y = 0; y < life.size(); y++) {
       for (std::vector<int>::size_type x = 0; x < life[y].size(); x++) {

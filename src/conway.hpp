@@ -1,6 +1,7 @@
 #include <vector>
 
-std::vector<std::vector<int>> conways(std::vector<std::vector<int>> &npt) {
+std::vector<std::vector<int>> conways(std::vector<std::vector<int>> &npt,
+                                      std::vector<std::string> rules) {
   std::vector<std::vector<int>> neu = npt;
   for (std::vector<int>::size_type y = 0; y < npt.size(); y++) {
     /* 1. Any live cell with fewer than two live neighbours dies, as if by
@@ -31,12 +32,29 @@ std::vector<std::vector<int>> conways(std::vector<std::vector<int>> &npt) {
           // bottom middle
           ((y < neu.size() - 1) && neu.at(y + 1).at(x)) +
           // bottom right
-          ((x < neu[y].size() - 1 && y < neu.size() - 1) && neu.at(y + 1).at(x + 1));
-      // rule 2 can be skipped in the logic loops
-      // rules 1 and 3
-      (neighbours < 2 || neighbours > 3) && (npt[y][x] = 0);
-      // rule 4
-      (neighbours == 3) && (npt[y][x] = 1);
+          ((x < neu[y].size() - 1 && y < neu.size() - 1) &&
+           neu.at(y + 1).at(x + 1));
+      if (rules.size() > 0) {
+        // example syntax: "-r m3=1 l2=1 e4=0 ;"
+        for (size_t i = 0; i < rules.size(); i++) {
+          if (std::string(1, rules[i].at(0)) == "l") {
+            (neighbours < (int)rules[i].at(1) - 48) &&
+                (npt[y][x] = (int)rules[i].at(3) - 48);
+          } else if (std::string(1, rules[i].at(0)) == "m") {
+            (neighbours > (int)rules[i].at(1) - 48) &&
+                (npt[y][x] = (int)rules[i].at(3) - 48);
+          } else {
+            (neighbours == (int)rules[i].at(1) - 48) &&
+                (npt[y][x] = (int)rules[i].at(3) - 48);
+          }
+        }
+      } else {
+        // rule 2 can be skipped in the logic loops
+        // rules 1 and 3
+        (neighbours < 2 || neighbours > 3) && (npt[y][x] = 0);
+        // rule 4
+        (neighbours == 3) && (npt[y][x] = 1);
+      }
     }
   }
   return npt;
