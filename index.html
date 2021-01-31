@@ -15,8 +15,36 @@
   <div>Rules</div>
   <input type="text" id="rules">
   <div>(use rules as written <a target="_blank"
-      href="https://github.com/s-mv/game-of-life/blob/main/README.md#custom-rules">here</a>, for example <code>l3=0 m5=0</code>)</div>
+      href="https://github.com/s-mv/game-of-life/blob/main/README.md#custom-rules">here</a>, for example
+    <code>l3=0 m5=0</code>)
+  </div>
   <div class="button">Run!</div>
+  <code>
+    <div>Rules:</div>
+    The rules can be something like l3=0 m4=1 =6=0<br />
+    <ul>
+    
+    <li> l means less than, r means more than and = means, well, equal to.</li>
+    <li> The number just after defines the number of cells.</li>
+    <li> The number at the end defines if a cell should be alive or dead if true.
+    So l3=0 translates to if less than 3</li>
+    <li> neighbours, cell should be dead</li>
+    </ul>
+    <div>How to interact:</div>
+    <ul>
+    <li> Holding space pauses the game while releasing it resumes. When held:</li>
+    <ul>  
+    <li> click/drag to add cell(s)</li>
+      <li> shift + click/drag to remove tiles</li>
+      <li> right arrow key to move ahead by one frame</li>
+    </ul>
+    </ul>
+  </code>
+  <div class="hidden container">
+    <div class="message"><code>ESC</code> to exit and rerun</div>
+    <canvas id="canvas" oncontextmenu="event.preventDefault()"></canvas>
+  </div>
+  <script src="./web/main.js"></script>
   <script src="./web/index.js"></script>
 </body>
 

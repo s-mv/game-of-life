@@ -5,4 +5,4 @@ sfml:
 sdl:
 	g++ ./src/main.sdl.cpp -std=c++17 $(SDLFLAGS) -o main.sdl
 emcc:
-	emcc ./src/main.web.cpp -s WASM=1 -g -s USE_SDL=2 -O3 -o ./web/main.js
+	emcc ./src/main.web.cpp -s WASM=1 -s USE_SDL=2 -s MODULARIZE=1 -O3 -o ./web/main.js

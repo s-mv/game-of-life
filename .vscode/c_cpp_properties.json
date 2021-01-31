@@ -5,6 +5,7 @@
             "includePath": [
                 "${default}",
                 "/usr/include/SDL2"
+                // "/usr/extras/emsdk/upstream/**"
             ],
             "defines": [],
             "compilerPath": "/usr/bin/clang",

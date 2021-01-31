@@ -29,22 +29,25 @@ EventHandler handler = NULL;
 
 // thanks a lot https://github.com/timhutton/sdl-canvas-wasm/
 
-struct context {
-  SDL_Renderer *renderer;
-  int iteration;
-};
-
-void mainLoop(void *arg) {
-  context *ctx = static_cast<context *>(arg);
-  SDL_Renderer *renderer = ctx->renderer;
+void mainLoop(void) {
   LAST = NOW;
   NOW = SDL_GetPerformanceCounter();
   deltaTime = (double)((NOW - LAST) / (double)SDL_GetPerformanceFrequency());
   i += deltaTime;
 
   handler.run();
+
+  if (handler.keys["esc"]) {
+    emscripten_run_script("document.querySelector(\".container\").classList.add(\"hidden\");");
+    emscripten_cancel_main_loop();
+    SDL_DestroyRenderer(renderer);
+    SDL_DestroyWindow(window);
+    SDL_Quit();
+
+    exit(0);
+  }
+
   state = (int)!handler.keys["space"];
-  // printf("hehhe %d\n", handler.mouse["pressed"] != 0 && state == 0);
 
   if (handler.mouse["pressed"] != 0 && state == 0) {
     life[handler.mouse["y"] * height / winhgt % height]
@@ -77,7 +80,6 @@ void mainLoop(void *arg) {
     }
   }
   SDL_RenderPresent(renderer);
-  ctx->iteration++;
 }
 
 int main(int argc, char **argv) {
@@ -120,17 +122,8 @@ int main(int argc, char **argv) {
 
   const int simulate_infinite_loop = 1;
   const int fps = -1;
-  context ctx;
-  ctx.renderer = renderer;
-  ctx.iteration = 0;
 
-  emscripten_set_main_loop_arg(mainLoop, &ctx, fps, simulate_infinite_loop);
-
-  // emscripten_set_main_loop(mainLoop, fps, simulate_infinite_loop);
-
-  SDL_DestroyRenderer(renderer);
-  SDL_DestroyWindow(window);
-  SDL_Quit();
+  emscripten_set_main_loop(mainLoop, 60, 1);
 
   return 0;
 }

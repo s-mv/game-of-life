@@ -1,6 +1,15 @@
+document.getElementById('canvas').getContext("2d").imageSmoothingEnabled = false;
+
+
 document.querySelector(".button").onclick = () => {
-  window.open(`./web/main.html?-d ${document.querySelector("#x").value || 20
-    } ${document.querySelector("#y").value || 20
-    } -r ${document.querySelector("#rules").value 
-    } ;`, "smv");
+  document.querySelector(".container").classList.remove("hidden");
+
+  Module({
+    canvas: document.getElementById('canvas'),
+    arguments: [
+      document.querySelector("#x").value || 20,
+      document.querySelector("#y").value || 20,
+      ...document.querySelector("#rules").value.split(/ /gi)
+    ],
+  });
 }

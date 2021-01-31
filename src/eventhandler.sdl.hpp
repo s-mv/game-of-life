@@ -25,6 +25,10 @@ private:
       keys["right"] = pressed;
       break;
     }
+    case SDLK_ESCAPE: {
+      keys["esc"] = pressed;
+      break;
+    }
     default: {
       break;
     }
@@ -33,9 +37,9 @@ private:
   void mouseMoveHandler() { SDL_GetMouseState(&mouse["x"], &mouse["y"]); }
 
 public:
-  bool quit = false;
-  std::unordered_map<std::string, bool> keys = {{"space", false},
-                                                {"true", false}};
+  bool quit = false;  
+  std::unordered_map<std::string, bool> keys = {
+      {"space", false}, {"shift", false}, {"esc", false}, {"true", false}};
   std::unordered_map<std::string, int> mouse = {
       {"x", 0}, {"y", 0}, {"pressed", 0}};
   EventHandler(SDL_Window *window) : window(window) {}
@@ -50,7 +54,6 @@ public:
         keyHandler(e.key.keysym.sym, true);
         break;
       }
-
       case SDL_KEYUP: {
         keyHandler(e.key.keysym.sym, false);
         break;
