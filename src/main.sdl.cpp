@@ -1,7 +1,6 @@
 /* name:   conway's game of life
    author: smv */
 
-#include <cmath>
 #include <string>
 
 #include <SDL2/SDL.h>

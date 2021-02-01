@@ -1,3 +1,5 @@
+#pragma once
+
 #include <vector>
 
 std::vector<std::vector<int>> conways(std::vector<std::vector<int>> &npt,

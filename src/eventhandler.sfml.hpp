@@ -1,12 +1,10 @@
 #pragma once
 
 #include <SFML/Graphics.hpp>
-#include <any>
 #include <string>
 #include <unordered_map>
 
 class EventHandler {
-
 private:
   sf::Event evt;
   sf::RenderWindow &window;

@@ -1,11 +1,7 @@
 /* name:   conway's game of life
    author: smv */
 
-#include <cmath>
-#include <iostream>
-#include <regex>
 #include <string>
-#include <vector>
 
 #include <SFML/Graphics.hpp>
 
@@ -80,8 +76,8 @@ int main(int argc, char **argv) {
           sf::RectangleShape rect(
               sf::Vector2f(winwid / width, winhgt / height));
           rect.setFillColor(sf ::Color(0x5300c6ff));
-          rect.setPosition((winwid + x * winwid) / width,
-                           (winhgt + y * winhgt) / height);
+          rect.setPosition((x * winwid) / width,
+                           (y * winhgt) / height);
           window.draw(rect);
         }
       }
