@@ -40,14 +40,14 @@ std::vector<std::vector<int>> conways(std::vector<std::vector<int>> &npt,
         // example syntax: "-r m3=1 l2=1 e4=0 ;"
         for (size_t i = 0; i < rules.size(); i++) {
           if (std::string(1, rules[i].at(0)) == "l") {
-            (neighbours < (int)rules[i].at(1) - 48) &&
-                (npt[y][x] = (int)rules[i].at(3) - 48);
+            (neighbours < (int)rules[i].at(1) - '0') &&
+                (npt[y][x] = (int)rules[i].at(3) - '0');
           } else if (std::string(1, rules[i].at(0)) == "m") {
-            (neighbours > (int)rules[i].at(1) - 48) &&
-                (npt[y][x] = (int)rules[i].at(3) - 48);
+            (neighbours > (int)rules[i].at(1) - '0') &&
+                (npt[y][x] = (int)rules[i].at(3) - '0');
           } else {
-            (neighbours == (int)rules[i].at(1) - 48) &&
-                (npt[y][x] = (int)rules[i].at(3) - 48);
+            (neighbours == (int)rules[i].at(1) - '0') &&
+                (npt[y][x] = (int)rules[i].at(3) - '0');
           }
         }
       } else {
