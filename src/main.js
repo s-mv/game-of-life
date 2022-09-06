@@ -28,7 +28,7 @@ let offset; // idk why this is global
 let getCell = (x, y) => array[y * width + x];
 // set cell at position
 let setCellPos = (x_mouse, y_mouse, val) => {
-  let x = x_mouse * width / window.innerWidth;
+  let x = x_mouse / size;
   let y = y_mouse / size;
   array[~~y * width + ~~x] = val;
 }
@@ -52,7 +52,7 @@ let loopFn = () => {
     if (mouse.down) {
       setCellPos(mouse.x, mouse.y, !mouse.delete);
     }
-  } else if (time.tick >= 400) {
+  } else if (time.tick >= 1000) {
     runGameAlgorithm();
     time.tick = 0;
   }
@@ -61,13 +61,11 @@ let loopFn = () => {
   // render
   ctx.clearRect(0, 0, window.innerWidth, window.innerHeight);
   // draw a grid first
-  {
-    for (let i = 0; i < width; i++) {
-      drawLine(i * size, 0, i * size, window.innerHeight);
-    }
-    for (let i = 0; i < height; i++) {
-      drawLine(0, i * size, window.innerWidth, i * size);
-    }
+  for (let i = 0; i < width; i++) {
+    drawLine(i * size, 0, i * size, window.innerHeight);
+  }
+  for (let i = 0; i < height; i++) {
+    drawLine(0, i * size, window.innerWidth, i * size);
   }
 
   for (let i = 0; i < array.length; i++) {
@@ -78,15 +76,38 @@ let loopFn = () => {
   }
 }
 
-init().then((instance) => {
+init({
+  env: {
+    consoleLog: console.log,
+  }
+}).then((instance) => {
+  // set up width and height
+  size = (window.innerWidth > window.innerHeight) ? window.innerWidth / width : window.innerHeight / height;
+  // fill the whole screen
+  if (window.innerWidth < window.innerHeight) width = 1 + window.innerWidth / size;
+  else height = 1 + window.innerHeight / size;
+
   // get all the functions and memory buffer from in there
-  let { acceptArray, updateRules, memory } = instance.exports;
+  let { acceptArray, acceptVariables, updateRules, memory } = instance.exports;
   runGameAlgorithm = instance.exports.runGameAlgorithm;
 
   // export array to WASM
-  array = new Int8Array(memory.buffer, 0, width * height).fill(0);
-  offset = width * height * Int8Array.BYTES_PER_ELEMENT;
+  array = new Int8Array(memory.buffer, offset, width * height).fill(0);
   acceptArray(array.byteOffset, array.length);
+
+  offset += width * height * Int8Array.BYTES_PER_ELEMENT;
+
+  // export rule array to WASM
+  let rule = "l2=0 m3=0 =3=1";
+  let rule_arr = new Int8Array(memory.buffer, offset, rule.length);
+  rule_arr.set(rule.split(""));
+  updateRules(rule_arr, rule_arr.length);
+
+  offset += rule_arr.length * Int8Array.BYTES_PER_ELEMENT;
+
+  // export variables to WASM
+  let gap = Int32Array.BYTES_PER_ELEMENT;
+  acceptVariables(offset);
 
   // set up DOM variables
   ruleWindow = document.querySelector("#rules");
@@ -95,11 +116,6 @@ init().then((instance) => {
   ctx = document.querySelector("#canvas").getContext("2d");
   ctx.canvas.width = window.innerWidth;
   ctx.canvas.height = window.innerHeight;
-
-  // set up width and height
-  size = window.innerWidth / width;
-  // fill the whole screen
-  height = 1 + window.innerHeight / size;
 
   // TODO scroll to increase/decrease number of rows
   // is this even needed
@@ -127,7 +143,7 @@ init().then((instance) => {
 
     let rules = new Int8Array(memory.buffer, offset, e.value.length);
     rules.set(e.value.split(""));
-    updateRules(rules);
+    updateRules(rules, rules.length);
   }
 
   window.onmousedown = window.onmouseup = (e) => {
