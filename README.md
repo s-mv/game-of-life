@@ -3,7 +3,7 @@
 ## What is this?
 The Game of Life, also known simply as Life, is a cellular automaton devised by the British mathematician John Horton Conway in 1970.  
 Read more <a target="_blank" href="https://en.wikipedia.org/wiki/Conway%27s_Game_of_Life">here</a>.  
-I just made it in C++ for fun.
+I just made it in C for fun.
 Web version <a target="_blank" href="https://s-mv.github.io/game-of-life/">here</a>.
 ## How to play?
 ### Controls

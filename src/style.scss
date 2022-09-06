@@ -1,5 +1,6 @@
 $bgcol: #242424;
-$rulecol: #3b3242;
+$pausecol: #3b3242;
+$pausetextcol: #ff4400;
 
 :root {
   font-family: Inter, Avenir, Helvetica, Arial, sans-serif;
@@ -27,8 +28,8 @@ body {
 }
 
 #canvas {
-  width: 100vw;
-  height: 100vh;
+  // width: 100vw;
+  // height: 100vh;
 
   background-color: $bgcol;
 }
@@ -40,4 +41,14 @@ body {
   
   padding: 1rem;
   border-radius: 5%;
+}
+
+#paused {
+  position: absolute;
+  bottom: 2rem;
+  right:2rem;
+
+  color: $pausetextcol;
+
+  
 }
