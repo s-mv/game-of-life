@@ -1,7 +1,9 @@
 import './style.scss';
 import init from './.tmp/lib.wasm?init';
 
-let array;
+let array = new Int8Array();
+let rule;
+
 let runGameAlgorithm;
 
 let width = 100;
@@ -39,6 +41,13 @@ let drawLine = (x1, y1, x2, y2) => {
   ctx.lineTo(x2, y2);
   ctx.stroke();
 };
+
+// let ruleMaker = (rules) => {
+//   let ret = [];
+//   // for (let i = 0; i < rules.length; i++) {
+//   // }
+//   return new Int8Array(ret);
+// }
 
 let loopFn = () => {
   // tick
@@ -88,26 +97,24 @@ init({
   else height = 1 + window.innerHeight / size;
 
   // get all the functions and memory buffer from in there
-  let { acceptArray, acceptVariables, updateRules, memory } = instance.exports;
+  let { acceptArray, updateRules, memory } = instance.exports;
   runGameAlgorithm = instance.exports.runGameAlgorithm;
 
-  // export array to WASM
-  array = new Int8Array(memory.buffer, offset, width * height).fill(0);
-  acceptArray(array.byteOffset, array.length);
+  // accept array from WASM
+  array = new Int8Array(memory.buffer, acceptArray(width * height, width, height), width * height).fill(0);
 
   offset += width * height * Int8Array.BYTES_PER_ELEMENT;
+  offset += 4 * Int32Array.BYTES_PER_ELEMENT;
 
   // export rule array to WASM
-  let rule = "l2=0 m3=0 =3=1";
+  rule = "l2=0 m3=0 =3=1";
   let rule_arr = new Int8Array(memory.buffer, offset, rule.length);
-  rule_arr.set(rule.split(""));
-  updateRules(rule_arr, rule_arr.length);
+  rule_arr.set(new TextEncoder().encode(rule));
+  console.log(rule_arr);
+  updateRules(offset, rule_arr.length);
 
-  offset += rule_arr.length * Int8Array.BYTES_PER_ELEMENT;
+  // offset += rule_arr.length * Int8Array.BYTES_PER_ELEMENT;
 
-  // export variables to WASM
-  let gap = Int32Array.BYTES_PER_ELEMENT;
-  acceptVariables(offset);
 
   // set up DOM variables
   ruleWindow = document.querySelector("#rules");
@@ -142,7 +149,8 @@ init({
     if (e.code != "EnterKey") return;
 
     let rules = new Int8Array(memory.buffer, offset, e.value.length);
-    rules.set(e.value.split(""));
+
+    rules.set(new TextEncoder().encode(e.value));
     updateRules(rules, rules.length);
   }
 
