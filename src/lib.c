@@ -1,5 +1,3 @@
-#define NO_CHANGE (42)
-
 char *arr;
 int arr_len;
 
@@ -24,7 +22,7 @@ int getNeighbours(int x, int y);
 void runGameAlgorithm() {
   // just store the changes
   char changes[arr_len];
-  int no_change_len;
+  int changes_len;
 
   for (int i = 0; i < arr_len; i++) {
     // I love how height doesn't even matter here
@@ -32,10 +30,13 @@ void runGameAlgorithm() {
     int x = i % width;
     int y = i / width;
     int v = getNeighbours(x, y);
-  }
-  changes[no_change_len] = NO_CHANGE;
+    for (int i = 0; i < rules_len; i++) {
+      if (rules[i] == 'l' && rules[i + 1] < rules[i + 2] - '0') {
 
-  for (int i = 0; changes[i] != NO_CHANGE; i++)
+      }
+    }
+  }
+  for (int i = 0; changes[i] < changes_len; i++)
     arr[changes[i]] = !arr[changes[i]];
 }
 
