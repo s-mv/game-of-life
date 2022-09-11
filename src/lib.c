@@ -1,32 +1,37 @@
-char arr[100 * 100];
+char old_arr[100 * 100];
 
 char rules[1024];
 
 int arr_len;
 int rules_len;
 int width, height;
+char new_arr[100 * 100];
 
 // terrible code formatting woohoo
 __attribute__((import_name("consoleLog"))) void consoleLog(
     int);  // this is just console.log
 
-char *acceptArray(int len, int w, int h) {
-  arr_len = len;
+char *acceptArray(int w, int h) {
   width = w;
   height = h;
-  consoleLog(arr_len);
-  return arr;
+  arr_len = w * h;
+  return old_arr;
+}
+
+void copyArray(char *to_be_copied, char *to_copy_to, int len) {
+  for (int i = 0; i < len; i++) {
+    to_copy_to[i] = to_be_copied[i];
+  }
 }
 
 void updateRules(char *a, int len) {
   for (int i = 0; i < len; i++) rules[i] = a[i];
-
   rules_len = len;
 }
 
 char getCell(int x, int y) {
   if (x < 0 || y < 0 || x > width || y > height) return 0;
-  return arr[y * width + x];
+  return old_arr[y * width + x];
 }
 
 int getNeighbours(int x, int y) {
@@ -37,9 +42,7 @@ int getNeighbours(int x, int y) {
 
 // runs just one frame of the algorithm
 void runGameAlgorithm() {
-  // just store the changes
-  char changes[arr_len];
-  int changes_len = 0;
+  copyArray(old_arr, new_arr, arr_len);
 
   for (int i = 0; i < arr_len; i++) {
     // I love how height doesn't even matter here
@@ -47,21 +50,25 @@ void runGameAlgorithm() {
     int x = i % width;
     int y = i / width;
     int v = getNeighbours(x, y);
-
     // for example for l3=0:
     // if l AND v < 3 AND cell is already dead, only then change
-    for (int k = 0; k < rules_len; k++)
+    for (int k = 0; k <= rules_len; k += 5) {
       if ((rules[k] == 'l' && v < rules[k + 1] - '0' &&
-           !!arr[i] != !!(rules[k + 3] - '0')) ||
+           !!old_arr[i] != !!(rules[k + 3] - '0')) ||
           (rules[k] == '=' && v == rules[k + 1] - '0' &&
-           !!arr[i] != !!(rules[k + 3] - '0')) ||
+           !!old_arr[i] != !!(rules[k + 3] - '0')) ||
           (rules[k] == 'm' && v > rules[k + 1] - '0' &&
-           !!arr[i] != !!(rules[k + 3] - '0'))) {
-        changes[changes_len++] = i;
-        k += 5;
+           !!old_arr[i] != !!(rules[k + 3] - '0'))) {
+        if (new_arr[i] == 1) consoleLog(new_arr[i]);
+        new_arr[i] = new_arr[i] ? 0 : 1;
       }
+    }
   }
 
-  for (int i = 0; changes[i] < changes_len; i++)
-    arr[changes[i]] = !arr[changes[i]];
+  copyArray(new_arr, old_arr, arr_len);  // this is so tedious, read end notes
 }
+// NOTES
+// I HATE THIS I HATE THIS
+// my original plan was to have a LOCAL array called changes
+// it would hold only the indices that had changed, not everything
+// but C WASM memory allocation is bad

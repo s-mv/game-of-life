@@ -4,7 +4,7 @@ import init from './.tmp/lib.wasm?init';
 let array = new Int8Array();
 let rule;
 
-let runGameAlgorithm;
+let runGameAlgorithm, memory, updateRules, acceptArray;
 
 let width = 100;
 let height = 100; // this is going to change any way
@@ -12,6 +12,7 @@ let size; // per cell
 
 // DOM and stuff
 let ruleWindow;
+let input;
 let pausedText;
 let ctx;
 
@@ -61,8 +62,9 @@ let loopFn = () => {
     if (mouse.down) {
       setCellPos(mouse.x, mouse.y, !mouse.delete);
     }
-  } else if (time.tick >= 1000) {
+  } else if (time.tick >= 600) {
     runGameAlgorithm();
+    array = new Int8Array(memory.buffer, acceptArray(width, height), width * height);
     time.tick = 0;
   }
   ctx.fillStyle = cellColour;
@@ -93,15 +95,17 @@ init({
   // set up width and height
   size = (window.innerWidth > window.innerHeight) ? window.innerWidth / width : window.innerHeight / height;
   // fill the whole screen
-  if (window.innerWidth < window.innerHeight) width = 1 + window.innerWidth / size;
-  else height = 1 + window.innerHeight / size;
+  if (window.innerWidth < window.innerHeight) width = 1 + ~~(window.innerWidth / size);
+  else height = 1 + ~~(window.innerHeight / size);
 
   // get all the functions and memory buffer from in there
-  let { acceptArray, updateRules, memory } = instance.exports;
+  acceptArray = instance.exports.acceptArray;
+  updateRules = instance.exports.updateRules;
+  memory = instance.exports.memory;
   runGameAlgorithm = instance.exports.runGameAlgorithm;
 
   // accept array from WASM
-  array = new Int8Array(memory.buffer, acceptArray(width * height, width, height), width * height).fill(0);
+  array = new Int8Array(memory.buffer, acceptArray(width, height), width * height);
 
   offset += width * height * Int8Array.BYTES_PER_ELEMENT;
   offset += 4 * Int32Array.BYTES_PER_ELEMENT;
@@ -110,11 +114,9 @@ init({
   rule = "l2=0 m3=0 =3=1";
   let rule_arr = new Int8Array(memory.buffer, offset, rule.length);
   rule_arr.set(new TextEncoder().encode(rule));
-  console.log(rule_arr);
   updateRules(offset, rule_arr.length);
 
   // offset += rule_arr.length * Int8Array.BYTES_PER_ELEMENT;
-
 
   // set up DOM variables
   ruleWindow = document.querySelector("#rules");
@@ -130,6 +132,7 @@ init({
 
   window.onkeydown = (e) => {
     if (e.key == "Shift") ruleWindow.hidden = !ruleWindow.hidden;
+    // if (!ruleWindow.hidden) .focus();
     if (e.key == " ") {
       canEdit = true;
       pausedText.hidden = false;
@@ -146,9 +149,9 @@ init({
   }
 
   ruleWindow.onkeydown = (e) => {
-    if (e.code != "EnterKey") return;
-
-    let rules = new Int8Array(memory.buffer, offset, e.value.length);
+    if (e.code != "Enter") return;
+    console.log("bro");
+    let rules = new Int8Array(memory.buffer, offset, ruleWindow.value.length);
 
     rules.set(new TextEncoder().encode(e.value));
     updateRules(rules, rules.length);
