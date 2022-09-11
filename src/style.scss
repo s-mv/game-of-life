@@ -1,5 +1,5 @@
 $bgcol: #242424;
-$pausecol: #3b3242;
+$pausecol: #1c1522;
 $pausetextcol: #ff4400;
 
 :root {
@@ -28,27 +28,38 @@ body {
 }
 
 #canvas {
-  // width: 100vw;
-  // height: 100vh;
-
   background-color: $bgcol;
 }
 
-#rules {
+#rules, #notes {
   position: absolute;
   top: 2rem;
   right: 2rem;
+  bottom: 2rem;
+  left: 2rem;
   
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
   padding: 1rem;
-  border-radius: 5%;
+  border-radius: 2%;
+
+  background: $pausecol;
+
+  
 }
 
 #paused {
   position: absolute;
   bottom: 2rem;
-  right:2rem;
+  right: 2rem;
 
+  display: block;
   color: $pausetextcol;
+}
 
-  
+.hidden {
+  display: none !important;
 }

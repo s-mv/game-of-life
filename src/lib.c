@@ -59,8 +59,7 @@ void runGameAlgorithm() {
            !!old_arr[i] != !!(rules[k + 3] - '0')) ||
           (rules[k] == 'm' && v > rules[k + 1] - '0' &&
            !!old_arr[i] != !!(rules[k + 3] - '0'))) {
-        if (new_arr[i] == 1) consoleLog(new_arr[i]);
-        new_arr[i] = new_arr[i] ? 0 : 1;
+        new_arr[i] = !new_arr[i];
       }
     }
   }

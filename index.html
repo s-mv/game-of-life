@@ -5,7 +5,7 @@
   <meta charset="UTF-8" />
   <link rel="icon" type="image/x-icon" href="data:image/x-icon;base64,AA">
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Vite App</title>
+  <title>Game of Life</title>
   
   <script type="module" crossorigin src="/public/index.js"></script>
   <link rel="stylesheet" href="/public/index.css">
@@ -13,11 +13,51 @@
 
 <body>
   <canvas id="canvas"></canvas>
-  <div id="rules" hidden>
+  <div id="notes">
+    <h1>Game of Life</h1>
+
+    <h3>Controls</h3>
+    <div>Holding space pauses the game while releasing it resumes. When held:</div>
+    <ul>
+      <li>
+        <strong>click</strong>/<strong>drag</strong> to <em>add cell(s)</em>
+      </li>
+      <li>
+        <strong>shift</strong> + <strong>click</strong>/<strong>drag</strong> to <em>remove tiles</em>
+      </li>
+      <li>
+        <strong>right arrow key</strong> to<em>move ahead by one frame</em>
+      </li>
+    </ul>
+
+    <h3>Custom rules</h3>
+    <div>Pressing <strong>shift</strong> will toggle the rules bar.</div>
+    <div>
+      The <em>rules</em> can be something like <code>l3=0 m4=1 =6=0</code> for example
+    </div>
+    <ul>
+      <li>
+        <code>l</code> means less than, <code>r</code> means more than and <code>=</code> means, well, equal to.
+      </li>
+      <li>
+        The number just after defines the
+        number of cells.
+      </li>
+      <li> The number at the end defines if a cell should be alive or dead if true. </li>
+    </ul>
+    <div>
+      So <code>l3=0</code>translates to <code>if less than 3 neighbours, cell should be dead</code>
+    </div>
+
+    <h2>PRESS ENTER TO START</h2>
+  </div>
+
+  <div id="rules" class="hidden">
     rules:
     <input type="text">
+    <div>(esc/enter to aply)</div>
   </div>
-  <div id="paused" hidden>paused</div>
+  <div id="paused" class="hidden">paused</div>
 </body>
 
 </html>

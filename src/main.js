@@ -121,6 +121,7 @@ init({
   // set up DOM variables
   ruleWindow = document.querySelector("#rules");
   pausedText = document.querySelector("#paused");
+  input = document.querySelector("input");
 
   ctx = document.querySelector("#canvas").getContext("2d");
   ctx.canvas.width = window.innerWidth;
@@ -131,11 +132,13 @@ init({
   window.onscroll = (e) => { }
 
   window.onkeydown = (e) => {
-    if (e.key == "Shift") ruleWindow.hidden = !ruleWindow.hidden;
-    // if (!ruleWindow.hidden) .focus();
+    document.querySelector("#notes").classList.add("hidden");
+
+    if (e.key == "Shift") ruleWindow.classList.toggle("hidden");
+    if (!ruleWindow.classList.contains("hidden")) input.focus();
     if (e.key == " ") {
       canEdit = true;
-      pausedText.hidden = false;
+      pausedText.classList.remove("hidden");
     }
     if (e.key == "x") mouse.delete = true;
   }
@@ -143,17 +146,20 @@ init({
   window.onkeyup = (e) => {
     if (e.key == " ") {
       canEdit = false;
-      pausedText.hidden = true;
+      pausedText.classList.add("hidden");
     }
     if (e.key == "x") mouse.delete = false;
   }
 
   ruleWindow.onkeydown = (e) => {
-    if (e.code != "Enter") return;
-    console.log("bro");
-    let rules = new Int8Array(memory.buffer, offset, ruleWindow.value.length);
+    // e.preventDefault();
+    if (e.code != "Enter" && e.key != "Escape")
+      return;
 
-    rules.set(new TextEncoder().encode(e.value));
+    ruleWindow.classList.add("hidden");
+    let rules = new Int8Array(memory.buffer, offset, input.value.length ? input.value.length : "l2=0 m3=0 =3=1".length);
+
+    rules.set(new TextEncoder().encode(input.value || "l2=0 m3=0 =3=1"));
     updateRules(rules, rules.length);
   }
 
