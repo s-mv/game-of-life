@@ -12,7 +12,7 @@ Web version <a target="_blank" href="https://s-mv.github.io/game-of-life/">here<
   - **shift** + **click**/**drag** to _remove tiles_
   - **right arrow key** to _move ahead by one frame_
 
-### Custom rules (TODO in the new version)
+### Custom rules
 Pressing **shift** will toggle the rules bar.  
 The _rules_ can be something like `l3=0 m4=1 =6=0` for example
 - `l` means less than, `r` means more than and `=` means, well, equal to.
