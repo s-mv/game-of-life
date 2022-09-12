@@ -1,15 +1,25 @@
 {
   "name": "game-of-life",
-  "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
+  "description": "game of life in JS and C",
+  "main": "esbuild.config.js",
   "type": "module",
   "scripts": {
-    "dev": "vite",
-    "build": "vite build",
-    "preview": "vite preview"
+    "build": "node .",
+    "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "devDependencies": {
-    "sass": "^1.54.8",
-    "vite": "^3.0.7"
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/s-mv/game-of-life.git"
+  },
+  "author": "smv",
+  "license": "GPL-3.0-or-later",
+  "bugs": {
+    "url": "https://github.com/s-mv/game-of-life/issues"
+  },
+  "homepage": "https://github.com/s-mv/game-of-life#readme",
+  "dependencies": {
+    "esbuild": "^0.15.7",
+    "esbuild-sass-plugin": "^2.3.2"
   }
 }

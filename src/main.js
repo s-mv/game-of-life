@@ -1,5 +1,4 @@
 import './style.scss';
-import init from './.tmp/lib.wasm?init';
 
 let array = new Int8Array();
 let rule;
@@ -43,13 +42,6 @@ let drawLine = (x1, y1, x2, y2) => {
   ctx.stroke();
 };
 
-// let ruleMaker = (rules) => {
-//   let ret = [];
-//   // for (let i = 0; i < rules.length; i++) {
-//   // }
-//   return new Int8Array(ret);
-// }
-
 let loopFn = () => {
   // tick
   time.now = new Date().getTime();
@@ -86,12 +78,11 @@ let loopFn = () => {
     if (val) ctx.fillRect(x, y, size, size);
   }
 }
-
-init({
+WebAssembly.instantiateStreaming(fetch("./public/lib.wasm"), {
   env: {
     consoleLog: console.log,
   }
-}).then((instance) => {
+}).then(({ instance }) => {
   // set up width and height
   size = (window.innerWidth > window.innerHeight) ? window.innerWidth / width : window.innerHeight / height;
   // fill the whole screen
